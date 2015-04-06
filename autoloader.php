@@ -1,15 +1,11 @@
 <?php
 
-// @TODO Create actual autoloader, etc etc
+namespace DB;
 
-// @TODO Convert to Zend configuration manager
-require_once('Configuration.php');
-require_once('Configuration/Configuration.php');
-if ($username == 'FIXME' || $password == 'FIXME') {
-	echo "Cannot continue until username and password are overridden in the configuration.ini file, in the override section.\n";
-	exit(1);
+// Would be nice to switch to Zend, but want to stay lighter for a demo
+function customAutoloader($class) {
+	require_once(str_replace('_', '/', $class) . '.php');
 }
 
-// @TODO Convert to Zend database adapters, data abstraction objects, etc, etc
-require_once('CustomDB.php');
-require_once('CustomDB/CustomDB.php');
+spl_autoload_register(__NAMESPACE__ . '\customAutoloader');
+
