@@ -1,0 +1,4 @@
+<?
+class StatsD {
+	//placeholder
+}
