@@ -11,7 +11,7 @@ class CacheStrategy_Abstract implements CacheStrategy {
 	}
 
 	public function purge(&$cache, $key) {
-		foreach (&$cache as $cacheListName => $cacheList) {
+		foreach ($cache as $cacheListName => $cacheList) {
 			unset($cache[$cacheListName][$key]);
 		}
 	}

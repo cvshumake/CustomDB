@@ -11,8 +11,8 @@ class CacheStrategy_LFU extends CacheStrategy_Abstract {
 
 	public function set(&$cache, $key, $value, $max) {
 
-		if (isset($cache[Cache_Abstract::CACHE_VALUE][$key]
-			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value)) {
+		if (isset($cache[Cache_Abstract::CACHE_VALUE][$key])
+			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value) {
 			return;
 		}
 

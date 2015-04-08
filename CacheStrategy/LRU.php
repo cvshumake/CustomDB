@@ -12,8 +12,8 @@ class CacheStrategy_LRU extends CacheStrategy_Abstract {
 	public function set(&$cache, $key, $value, $max) {
 
 		$cache[self::CACHESTRATEGY_UTIME][$key] = microtime(true);
-		if (isset($cache[Cache_Abstract::CACHE_VALUE][$key]
-			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value)) {
+		if (isset($cache[Cache_Abstract::CACHE_VALUE][$key])
+			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value) {
 			return;
 		}
 

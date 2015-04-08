@@ -1,5 +1,6 @@
 <?php
 
+// TODO integrate with Cache object
 class Configuration extends Pattern_Singleton {
 
 	private $filename = 'configuration.ini';

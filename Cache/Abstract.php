@@ -22,6 +22,7 @@ class Cache_Abstract implements Cache {
 	
 	public function get($key) {
 		if (!isset($this->cache[Cache_Abstract::CACHE_VALUE][$key])) {
+			// TODO proper exceptions
 			throw new Exception("Key $key not set.");
 		}
 		return $this->strategy->get($this->cache, $key);
@@ -39,7 +40,7 @@ class Cache_Abstract implements Cache {
 	}
 		
 	public function set($key, $value) {
-		return $this->strategy->set($this->cache, $key, $value);
+		return $this->strategy->set($this->cache, $key, $value, static::CACHE_MAX_LEN);
 	}
 
 	public function setStrategy(CacheStrategy $strategy) {

@@ -24,7 +24,7 @@ print_r($pdoStatement->fetchAll());
 */
 
 // (Bad) Error Handling
-$preparedStatementHandleCache = new Cache_PreparedStatement();
+$preparedStatementHandleCache = new Cache_PreparedStatements();
 $sql = 'SELECT ID, Name FROM city WHERE Name = :name LIMIT 3';
 do {
 	try {
@@ -34,17 +34,23 @@ do {
 		// Example unobfuscated error code handling
 		if (in_array($e->getCode(), array(2002))) {
 			$tries++;
-			usleep(rand($config->CUSTOMDB_USLEEP_MIN, $config->CUSTOMDB_USLEEP_MAX));
+			usleep(rand($config->DB_USLEEP_MIN, $config->DB_USLEEP_MAX));
 		} else {
 			throw $e;
 		}
 	}
-} while (!$pdoHandle && $tries < $config->CUSTOMDB_MAX_TRIES);
+} while (!$pdoHandle && $tries < $config->DB_MAX_TRIES);
+if (!$pdoHandle) {
+	throw new Exception('Failed to generate database handle.');
+}
 
 if (!$preparedStatementHandleCache->is_set($sql)) {
 	$loops = 0;
 	while (true) {
 		$loops++;
+		if ($loops > 4) {
+			throw Exception('Infinite loop.');
+		}
 		try {
 			$preparedStatementHandleCache->set($sql, $pdoHandle->prepare($sql));
 			break;
@@ -68,5 +74,6 @@ $pdoStatement = $preparedStatementHandleCache->get($sql);
 $pdoStatement->execute(array('name' => 'Kabul'));
 print_r($pdoStatement->fetchAll());
 
-// Issue 1: DB Wrapper 
+// A good DB Wrapper
 $city = CustomDB::find('City', array(CustomDB_Model::FIELD_ID => 4));
+$city = DB_Model_City::findById(4);

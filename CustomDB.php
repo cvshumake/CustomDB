@@ -12,6 +12,9 @@ class CustomDB {
 	
 	static function getDBH() {
 
+		// @HERE TODO configuration and db are colliding due to the way Singleton is written
+		$config = Configuration::getInstance();
+
 		$username = $config->username;
 		$password = $config->password;
 		$ip = $config->ip;
@@ -20,10 +23,12 @@ class CustomDB {
 
 		// Set other attributes as needed: http://php.net/manual/en/pdo.constants.php
 		$options = array(
-			// Errors should throw exceptions
-			PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION,
-			// Fetch associative arrays (@TODO: Fetch hydrated objects)
-			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+				// Errors should throw exceptions
+				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION,
+				// Fetch associative arrays (@TODO: Fetch hydrated objects)
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+				// No conversion of nulls
+				PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
 			);
 
 		$dsn = CustomDB::getDSN($ip, $dbname, $port);
