@@ -37,7 +37,6 @@ class DB extends Pattern_Singleton {
 
 	public function find($className, $args) {
 		$config = Configuration::getInstance();
-		$object = new $className();
 
 		$whereClause = $this->whereClause($className, $args);
 		$params = $this->params($className, $args);
@@ -49,7 +48,7 @@ class DB extends Pattern_Singleton {
 			$tries++;
 			$this->connect($forceReconnect);
 			try {
-				$result = $this->connection->execute($sql, $params); 
+				$result = $this->connection->execute($sql, $params, $className); 
 				break;
 			} catch (Exception $e) {
 				if ($tries > $config->DB_MAX_TRIES) {
@@ -109,7 +108,7 @@ class DB extends Pattern_Singleton {
 			if (isset($sql)) {
 				$sql .= " AND $columnName = :$columnName";
 			} else {
-				$sql = "WHERE $columnName = :$columnName";
+				$sql = " WHERE $columnName = :$columnName";
 			}
 		}
 		return $sql;

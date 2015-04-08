@@ -10,7 +10,7 @@ class Cache_Abstract implements Cache {
 		return static::CACHE_MAX_LEN;
 	}
 
-	static function getCacheStrategyType() {
+	public static function getCacheStrategyType() {
 		return static::CACHE_STRATEGY_NAME;
 	}
 

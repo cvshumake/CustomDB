@@ -24,8 +24,8 @@ class CustomDB {
 		$options = array(
 				// Errors should throw exceptions
 				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION,
-				// Fetch associative arrays (@TODO: Fetch hydrated objects)
-				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+				// Fetch hydrated objects
+				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_CLASS,
 				// No conversion of nulls
 				PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
 			);
@@ -55,7 +55,7 @@ class CustomDB {
 		return $prepStmtHandle;
 	}
 
-	public function execute($sql, $params) {
+	public function execute($sql, $params, $className) {
 		if (!$this->preparedStatementHandleCache->is_set($sql)) {
 			CustomStat::increment('CustomDB.prepStmt.miss');
 			$this->prepare($sql);
@@ -63,7 +63,7 @@ class CustomDB {
 			CustomStat::increment('CustomDB.prepStmt.hit');
 		}
 		$this->preparedStatementHandleCache->get($sql)->execute($params);
-		return $this->preparedStatementHandleCache->get($sql)->fetchAll();
+		return $this->preparedStatementHandleCache->get($sql)->fetchAll(PDO::FETCH_CLASS, $className);
 
 	}
 		
