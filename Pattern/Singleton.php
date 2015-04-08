@@ -9,7 +9,7 @@ class Pattern_Singleton {
 	private function __wakeup() {
 	}
 
-	public function getInstance() {
+	public static function getInstance() {
 		static $instance = null;
 		if ($instance == null) {
 			$instance = new static();

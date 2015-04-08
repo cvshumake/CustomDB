@@ -24,7 +24,7 @@ print_r($pdoStatement->fetchAll());
 */
 
 // (Bad) Error Handling
-$preparedStatementHandleCache = new Cache_PreparedStatements();
+$preparedStatementHandleCache = new Cache_PreparedStatement();
 $sql = 'SELECT ID, Name FROM city WHERE Name = :name LIMIT 3';
 do {
 	try {

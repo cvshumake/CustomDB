@@ -10,9 +10,8 @@ class CustomDB {
 		$this->preparedStatementHandleCache = new Cache_PreparedStatement();
 	}
 	
-	static function getDBH() {
+	public static function getDBH() {
 
-		// @HERE TODO configuration and db are colliding due to the way Singleton is written
 		$config = Configuration::getInstance();
 
 		$username = $config->username;
