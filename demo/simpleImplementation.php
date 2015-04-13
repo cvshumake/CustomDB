@@ -3,7 +3,6 @@
 $here = dirname(__FILE__);
 require_once($here . '/../cli.php');
 
-/*
 // Prep Stmt Code w/ Parameter
 $pdoHandle = CustomDB::getDBH();
 $sql = 'SELECT ID, Name FROM city WHERE Name = :name LIMIT 3';
@@ -21,14 +20,14 @@ if (!$preparedStatementHandleCache->is_set($sql)) {
 $pdoStatement = $preparedStatementHandleCache->get($sql);
 $pdoStatement->execute(array('name' => 'Kabul'));
 print_r($pdoStatement->fetchAll());
-*/
 
 // (Bad) Error Handling
 $preparedStatementHandleCache = new Cache_PreparedStatement();
 $sql = 'SELECT ID, Name FROM city WHERE Name = :name LIMIT 3';
+$tries = 0;
 do {
 	try {
-		$tries = 0;
+		$tries++;
 		$pdoHandle = CustomDB::getDBH();
 	} catch (Exception $e) {
 		// Example unobfuscated error code handling
@@ -74,6 +73,8 @@ $pdoStatement = $preparedStatementHandleCache->get($sql);
 $pdoStatement->execute(array('name' => 'Kabul'));
 print_r($pdoStatement->fetchAll());
 
-// A good DB Wrapper
-$city = CustomDB::find('City', array(CustomDB_Model::FIELD_ID => 4));
-$city = DB_Model_City::findById(4);
+// A good enough DB Wrapper
+$DB = DB::getInstance();
+$city = $DB->find('Model_City', array(Model::FIELD_ID => 4));
+// TODO wishful thinking for now 
+//$city = DB_Model_City::findById(4);
