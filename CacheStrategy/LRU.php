@@ -1,34 +1,41 @@
 <?php
 
-class CacheStrategy_LRU extends CacheStrategy_Abstract {
+class CacheStrategy_LRU2 extends CacheStrategy_Abstract {
 
-	const CACHESTRATEGY_UTIME = 'utime';
+	const CACHESTRATEGY_POINTER = 'pointer';
 
 	public function get(&$cache, $key) {
-		$cache[self::CACHESTRATEGY_UTIME][$key] = microtime(true);
+		$value = $cache[self::CACHESTRATEGY_POINTER][$key];
+		unset($cache[self::CACHESTRATEGY_POINTER][$key]);
+		$cache[self::CACHESTRATEGY_POINTER][$key] = $value;
+		if (!isset($cache[Cache_Abstract::CACHE_VALUE][$key])) {
+			// Todo better exceptions
+			throw Exception('Value does not exist for key (key=' . $key . ').');
+		}
 		return $cache[Cache_Abstract::CACHE_VALUE][$key];
 	}
 
 	public function set(&$cache, $key, $value, $max) {
 
-		$cache[self::CACHESTRATEGY_UTIME][$key] = microtime(true);
 		if (isset($cache[Cache_Abstract::CACHE_VALUE][$key])
-			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value) {
+			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value
+			&& isset($cache[self::CACHESTRATEGY_POINTER][$key])) {
 			return;
 		}
 
+		unset($cache[self::CACHESTRATEGY_POINTER][$key]);
+		$cache[self::CACHESTRATEGY_POINTER][$key] = true;
 		$cache[Cache_Abstract::CACHE_VALUE][$key] = $value; 
 		$count = count($cache[Cache_Abstract::CACHE_VALUE]);
 		$countPurged = 0;
 		if ($count >= $max) {
-			asort($cache[self::CACHESTRATEGY_UTIME]);
-			do {
-				$keyPurged = key($cache[self::CACHESTRATEGY_UTIME]);
-				$this->purge($cache, $key);
+			reset($cache[self::CACHESTRATEGY_POINTER]);
+		//	do {
+				$keyPurged = key($cache[self::CACHESTRATEGY_POINTER]);
+				$this->purge($cache, $keyPurged);
 				$countPurged++;
-			} while (count($cache[Cache_Abstract::CACHE_VALUE]) >= $max);
+			//} while (count($cache[Cache_Abstract::CACHE_VALUE]) >= $max);
 		}
 		return $countPurged;
 	}
-		
 }
