@@ -30,11 +30,11 @@ class CacheStrategy_LRU2 extends CacheStrategy_Abstract {
 		$countPurged = 0;
 		if ($count >= $max) {
 			reset($cache[self::CACHESTRATEGY_POINTER]);
-		//	do {
+			do {
 				$keyPurged = key($cache[self::CACHESTRATEGY_POINTER]);
 				$this->purge($cache, $keyPurged);
 				$countPurged++;
-			//} while (count($cache[Cache_Abstract::CACHE_VALUE]) >= $max);
+			} while ($count - $countPurged >= $max);
 		}
 		return $countPurged;
 	}
