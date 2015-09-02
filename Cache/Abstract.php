@@ -11,7 +11,7 @@ class Cache_Abstract implements Cache {
 	}
 
 	public static function getCacheStrategyType() {
-		return static::CACHE_STRATEGY_NAME;
+		return static::CACHESTRATEGY_NAME;
 	}
 
 	public function __construct() {

@@ -1,5 +1,6 @@
 <?php
 
+// Note that this DB singleton is not a db connection, just a db wrapper
 class DB extends Pattern_Singleton {
 	// adapters, etc would be great, just need this done for PL2015.
 	// Maybe later, hence so many TODOs

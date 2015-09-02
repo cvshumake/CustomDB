@@ -22,15 +22,13 @@ class CacheStrategy_LFU extends CacheStrategy_Abstract {
 		$countPurged = 0;
 		if ($count >= $max) {
 			asort($cache[self::CACHESTRATEGY_COUNT]);
-			do {
-				$keyPurged = key($cache[self::CACHESTRATEGY_COUNT]);
-				unset($cache[Cache_Abstract::CACHE_VALUE][$keyPurged]);
-				array_shift($cache[self::CACHESTRATEGY_COUNT]);
-				$count = count($cache[Cache_Abstract::CACHE_VALUE]);
-				$countPurged++;
-			} while ($count >= $max);
+		}
+		while ($count - $countPurged > $max) {
+			$keyPurged = key($cache[self::CACHESTRATEGY_COUNT]);
+			$this->purge($cache, $keyPurged);
+			array_shift($cache[self::CACHESTRATEGY_COUNT]);
+			$count = count($cache[Cache_Abstract::CACHE_VALUE]);
+			$countPurged++;
 		}
 		return $countPurged;
 	}
-		
-}

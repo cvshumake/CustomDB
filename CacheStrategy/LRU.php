@@ -1,6 +1,8 @@
 <?php
 
-class CacheStrategy_LRU2 extends CacheStrategy_Abstract {
+class CacheStrategy_LRU extends CacheStrategy_Abstract {
+
+	const CACHESTRATEGY_NAME = 'lru';
 
 	const CACHESTRATEGY_POINTER = 'pointer';
 
@@ -15,7 +17,7 @@ class CacheStrategy_LRU2 extends CacheStrategy_Abstract {
 		return $cache[Cache_Abstract::CACHE_VALUE][$key];
 	}
 
-	public function set(&$cache, $key, $value, $max) {
+	public function set(&$cache, $key, $value, int $max) {
 
 		if (isset($cache[Cache_Abstract::CACHE_VALUE][$key])
 			&& $cache[Cache_Abstract::CACHE_VALUE][$key] === $value
@@ -28,13 +30,11 @@ class CacheStrategy_LRU2 extends CacheStrategy_Abstract {
 		$cache[Cache_Abstract::CACHE_VALUE][$key] = $value; 
 		$count = count($cache[Cache_Abstract::CACHE_VALUE]);
 		$countPurged = 0;
-		if ($count >= $max) {
+		while ($count - $countPurged >= $max) {
 			reset($cache[self::CACHESTRATEGY_POINTER]);
-			do {
-				$keyPurged = key($cache[self::CACHESTRATEGY_POINTER]);
-				$this->purge($cache, $keyPurged);
-				$countPurged++;
-			} while ($count - $countPurged >= $max);
+			$keyPurged = key($cache[self::CACHESTRATEGY_POINTER]);
+			$this->purge($cache, $keyPurged);
+			$countPurged++;
 		}
 		return $countPurged;
 	}
